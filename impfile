@@ -1,0 +1,113 @@
+🛠️ 1. Required Hardware
+
+ESP32-CAM module (with OV2640 camera, already attached).
+
+FTDI USB-to-Serial programmer (3.3V, supports 5V supply).
+
+Jumper wires (female-female).
+
+Breadboard (optional).
+
+USB cable (to connect FTDI → laptop).
+
+⚠️ ESP32-CAM has no onboard USB, so you need the FTDI module for programming.
+
+🔌 2. Wiring ESP32-CAM to FTDI Programmer
+ESP32-CAM Pin	FTDI Programmer Pin
+5V	5V
+GND	GND
+U0R (RX)	TX
+U0T (TX)	RX
+IO0	GND (only during programming)
+
+👉 Notes:
+
+Connect IO0 → GND when uploading code. Remove it after flashing.
+
+ESP32-CAM can draw up to 300 mA → make sure your FTDI can supply enough current.
+
+💻 3. Arduino IDE Setup
+
+Install Arduino IDE (latest version).
+
+Add ESP32 board support:
+
+File → Preferences → add this URL:
+
+https://dl.espressif.com/dl/package_esp32_index.json
+
+
+Tools → Board → Board Manager → search ESP32, install.
+
+Select board:
+
+Board: AI Thinker ESP32-CAM
+
+Partition Scheme: Huge APP (3MB, No OTA)
+
+Upload Speed: 115200 baud
+
+Programmer: AVR ISP (default)
+
+📜 4. Example Code (CameraWebServer)
+
+In Arduino IDE:
+
+File → Examples → ESP32 → Camera → CameraWebServer
+
+Change this part (near top of sketch):
+
+// Select camera model
+#define CAMERA_MODEL_AI_THINKER
+
+#include "camera_pins.h"
+
+
+Update Wi-Fi credentials:
+
+const char* ssid = "YourWiFiName";
+const char* password = "YourWiFiPassword";
+
+
+Upload code (hold IO0 to GND).
+After success → disconnect IO0 from GND and reset ESP32-CAM.
+
+🌐 5. Run the Camera
+
+Open Serial Monitor (115200 baud).
+
+ESP32-CAM connects to Wi-Fi → prints IP address.
+Example:
+
+WiFi connected
+Camera ready! Use 'http://192.168.1.42' to connect
+
+
+Open that IP in browser → see live video stream.
+
+You’ll get options like: resolution, quality, face detection, face recognition.
+
+🛠️ 6. Troubleshooting (Root Guidance)
+⚡ Upload Issues
+
+"Failed to connect" error → check IO0 is grounded during upload, reset module once.
+
+Wrong COM port → check FTDI driver installed.
+
+⚡ Power Issues
+
+ESP32-CAM keeps rebooting → power supply too weak. Use separate 5V 1A supply if FTDI can’t provide enough current.
+
+⚡ No Camera Found
+
+Ensure correct board (AI Thinker ESP32-CAM).
+
+Check #define CAMERA_MODEL_AI_THINKER is uncommented.
+
+⚡ Stream Laggy
+
+Start with lower resolution (e.g., QVGA 320×240).
+
+
+
+ESP32 is not a high-speed camera board, so higher res (SVGA, XGA) reduces FPS.
